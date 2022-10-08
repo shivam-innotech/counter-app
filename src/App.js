@@ -1,25 +1,31 @@
-import logo from './logo.svg';
+import React from "react";
 import './App.css';
+import { useReducer } from 'react';
+import { AppContext } from './context/AppContext';
+import { counterReducer } from './reducer/counter-reducer';
+import { v4 as uuid } from 'uuid';
+import CounterApp from './components/CounterApp';
 
-function App() {
+export default function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <CounterProvider>
+        <CounterApp />
+      </CounterProvider>
+    </div >
   );
 }
 
-export default App;
+export const CounterProvider = ({ children }) => {
+  const [data, dispatchData] = useReducer(counterReducer, { [uuid()]: newGroupMetadata });
+  return <AppContext.Provider value={{ data, dispatchData }}> {children} </AppContext.Provider>;
+};
+
+export const newCounterMetadata = { value: 0 };
+
+export const newGroupMetadata = {
+  incrementBy: 1,
+  counters: {
+    [uuid()]: newCounterMetadata
+  }
+};
